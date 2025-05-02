@@ -1,0 +1,5 @@
+Disekitar rumah Iwan pada malam hari musim penghujan, Sering terdengar suara katak saling besahut-sahut dengan irama yang berbeda, Iwan berpendapat, ada beberapa jenis katak yang berda di sekitar rumahnya, karena suara yang terdengar berbeda iramanya. Iwan melakukan perekaman suara katak tersebut dan menganalisanya menggunakan perangkat lunak komputer jenis katak di sekitar rumahnya merupakan ...;Mengajukan Hipotesa, Merumuskan Masalah, Melakkan Eksperimen, Menyusun Kerangka;Menyusun Kerangka
+Hewan Hematofagi berikut yang tidak termasuk serangga adalah....;Lintah, Tumbila, Kutu Kepala, Nyamuk;Lintah
+Berikut adalah hewan yang dilindungi dan dapat dijumpai di pulau kalimantan KECUALI ;Orangutan, Burung Maleo, Ikan Arowanan/ Tangkalesa, Beruang Madu;Orangutan
+Algoritma pengurutan mana yang paling efisien untuk mengurutkan sejumlah besar data yang hampir terurut sebagian?; Bubble Sort, Insertion Sort, Merge Sort, Quick Sort;Insertion Sort
+Konsep matematika mana yang menjadi dasar dari algoritma Principal Component Analysis (PCA) dalam reduksi dimensi data?; Kalkulus Diferensial, Aljabar Linear, Teori Probabilitas, Statistika Inferensial;Aljabar Linear
