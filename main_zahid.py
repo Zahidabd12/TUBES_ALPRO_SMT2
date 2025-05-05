@@ -82,8 +82,17 @@ class AplikasiKuis:
             print(f"Skor akhir Anda: {current_user['skor']}")
         else:
             print("Belum ada pengguna yang terdaftar.")
+    
+    def cari_mahasiswa(self):
+        cari = input('Masukkan NIM yang ingin dicari: ')
+        for user in self.daftar_user:
+            if user['nim'] == cari:
+                print(f"Nama: {user['nama']}, NIM: {user['nim']}, Skor: {user['skor']}")
+                return
+        print("Mahasiswa tidak ditemukan.")
 
 kuis_app = AplikasiKuis()
-kuis_app.halaman_nama()
+#kuis_app.halaman_nama()
 #kuis_app.tambah_soal()
-kuis_app.mulai_kuis()
+#kuis_app.mulai_kuis()
+kuis_app.cari_mahasiswa()
