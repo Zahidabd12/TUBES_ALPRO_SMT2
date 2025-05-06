@@ -6,7 +6,7 @@ class AplikasiKuis:
         self.nim = ''
         self.soal = []
         self.skor = []
-        self.daftar_user = []
+        self.daftar_user = 'user.txt'
         self.nama_file_soal = 'soal_sederhana.txt'
         self.load_soal()
 
@@ -20,6 +20,16 @@ class AplikasiKuis:
                         opsi = data[1].split(',')
                         jawaban = data[2]
                         self.soal.append({'soal': soal, 'opsi': opsi, 'jawaban': jawaban})
+    def load_user(self):
+        if os.path.exists(self.daftar_user):
+            with open(self.daftar_user, 'r') as file:
+                for line in file:
+                    data = line.strip().split(';')
+                    if len(data) == 3:
+                        nama = data[0]
+                        nim = data[1]
+                        skor = data[2]
+                        self.soal.append({'nama': nama, 'nim': nim, 'skor': skor})
 
     def welcome(self):
         self.clear()
