@@ -1,6 +1,9 @@
 import os
+import tkinter as tk
+import ttkbootstrap as ttk
+from tkinter import messagebox
 
-class AplikasiKuis:
+class AplikasiKuis: # Kelas logika aplikasi (seperti yang sudah kita buat sebelumnya)
     def __init__(self):
         self.user = ''
         self.nim = ''
@@ -146,8 +149,7 @@ class AplikasiKuis:
                 while index < len(self.daftar_user) and self.daftar_user[index]['nama'].lower() == nama_cari.lower():
                     hasil_pencarian.append(self.daftar_user[index])
                     index += 1
-                return hasil_pencarian 
-
+                return hasil_pencarian
         return hasil_pencarian
 
     def menu_cari_user(self):
@@ -175,8 +177,121 @@ class AplikasiKuis:
     def clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
 
-kuis_app = AplikasiKuis()
-# kuis_app.halaman_nama()
-# kuis_app.mulai_kuis()
-kuis_app.tambah_soal() 
-# kuis_app.cari_mahasiswa() 
+class AplikasiKuisGUI: # Kelas untuk GUI
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Aplikasi Kuis")
+        self.style = ttk.Style(theme="flatly") # Pilih tema yang menarik
+        self.kuis_app = AplikasiKuis() # Membuat instance dari kelas logika
+        self.current_question_index = 0
+        self.user_answer = tk.StringVar()
+        self.current_user = None # Untuk menyimpan informasi user yang sedang aktif
+
+        self.show_login_page()
+
+    def show_login_page(self):
+        self.clear_frame()
+        login_frame = ttk.Frame(self.master, padding=20)
+        login_frame.pack(fill="both", expand=True)
+
+        ttk.Label(login_frame, text="Selamat Datang di Aplikasi Kuis!", font=("Arial", 16)).pack(pady=10)
+
+        ttk.Label(login_frame, text="Nama:").pack(pady=5)
+        self.nama_entry = ttk.Entry(login_frame)
+        self.nama_entry.pack(pady=5)
+
+        ttk.Label(login_frame, text="NIM:").pack(pady=5)
+        self.nim_entry = ttk.Entry(login_frame)
+        self.nim_entry.pack(pady=5)
+
+        ttk.Button(login_frame, text="Mulai Kuis", command=self.start_quiz).pack(pady=15)
+
+    def start_quiz(self):
+        nama = self.nama_entry.get()
+        nim = self.nim_entry.get()
+        if nama and nim:
+            self.current_user = {'nama': nama, 'nim': nim, 'skor': 0}
+            self.kuis_app.daftar_user.append(self.current_user)
+            self.kuis_app.save_user() # Simpan user baru
+            self.show_quiz_page()
+        else:
+            messagebox.showerror("Error", "Nama dan NIM harus diisi.")
+
+    def show_quiz_page(self):
+        if not self.kuis_app.soal:
+            messagebox.showinfo("Info", "Soal kuis belum tersedia.")
+            return
+
+        self.clear_frame()
+        quiz_frame = ttk.Frame(self.master, padding=20)
+        quiz_frame.pack(fill="both", expand=True)
+
+        self.question_label = ttk.Label(quiz_frame, text="", font=("Arial", 12), wraplength=400)
+        self.question_label.pack(pady=10)
+
+        self.radio_buttons = []
+        for i in range(4): # Asumsi maksimal 4 opsi
+            radio_button = ttk.Radiobutton(quiz_frame, text="", variable=self.user_answer, value=str(i + 1))
+            self.radio_buttons.append(radio_button)
+            radio_button.pack(anchor="w", pady=5)
+
+        ttk.Button(quiz_frame, text="Jawab", command=self.check_answer).pack(pady=15)
+        self.load_question()
+
+    def load_question(self):
+        if self.current_question_index < len(self.kuis_app.soal):
+            current_soal = self.kuis_app.soal[self.current_question_index]
+            self.question_label.config(text=f"Pertanyaan {self.current_question_index + 1}: {current_soal['soal']}")
+            options = current_soal['opsi']
+            for i, button in enumerate(self.radio_buttons):
+                if i < len(options):
+                    button.config(text=options[i], state="normal")
+                else:
+                    button.config(text="", state="disabled") # Menonaktifkan opsi yang tidak ada
+            self.user_answer.set(None) # Reset pilihan jawaban
+        else:
+            self.show_result_page()
+
+    def check_answer(self):
+        if self.user_answer.get():
+            current_soal = self.kuis_app.soal[self.current_question_index]
+            jawaban_user = self.user_answer.get()
+            jawaban_benar_index = -1
+            for i, opsi in enumerate(current_soal['opsi']):
+                if opsi == current_soal['jawaban']:
+                    jawaban_benar_index = i + 1
+                    break
+
+            if jawaban_user == str(jawaban_benar_index):
+                messagebox.showinfo("Benar", "Jawaban Anda benar!")
+                if self.current_user:
+                    self.current_user['skor'] += 1
+            else:
+                messagebox.showerror("Salah", f"Jawaban Anda salah. Jawaban yang benar adalah: {current_soal['jawaban']}")
+
+            self.current_question_index += 1
+            self.load_question()
+        else:
+            messagebox.showwarning("Peringatan", "Silakan pilih jawaban terlebih dahulu.")
+
+    def show_result_page(self):
+        self.clear_frame()
+        result_frame = ttk.Frame(self.master, padding=20)
+        result_frame.pack(fill="both", expand=True)
+
+        ttk.Label(result_frame, text="Hasil Kuis", font=("Arial", 16)).pack(pady=10)
+        if self.current_user:
+            ttk.Label(result_frame, text=f"Nama: {self.current_user['nama']}", font=("Arial", 12)).pack(pady=5)
+            ttk.Label(result_frame, text=f"NIM: {self.current_user['nim']}", font=("Arial", 12)).pack(pady=5)
+            ttk.Label(result_frame, text=f"Skor Anda: {self.current_user['skor']} / {len(self.kuis_app.soal)}", font=("Arial", 12, "bold")).pack(pady=10)
+
+        ttk.Button(result_frame, text="Kembali ke Menu Login", command=self.show_login_page).pack(pady=15)
+
+    def clear_frame(self):
+        for widget in self.master.winfo_children():
+            widget.destroy()
+
+if __name__ == "__main__":
+    root = ttk.Window(themename="flatly")
+    app = AplikasiKuisGUI(root)
+    root.mainloop()
