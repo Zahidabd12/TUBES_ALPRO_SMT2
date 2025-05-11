@@ -59,6 +59,10 @@ class KuisApp:
             messagebox.showwarning("Input Tidak Lengkap", "Nama dan NIM harus diisi.")
             return
 
+        if not self.nim.isdigit():
+            messagebox.showwarning("NIM Tidak Valid", "NIM harus berupa angka.")
+            return
+
         self.index_soal = 0
         self.skor = 0
         self.tampilkan_soal()
@@ -147,7 +151,7 @@ class KuisApp:
                         if nama_dicari in line.lower():
                             result.config(text=f"Ditemukan: {line.strip()}")
                             return
-                result.config(text="Tidak ditemukan.")
+                    result.config(text="Tidak ditemukan.")
             except FileNotFoundError:
                 result.config(text="File data.txt tidak ditemukan.")
 
