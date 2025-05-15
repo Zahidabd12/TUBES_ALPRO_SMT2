@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 
 import tkinter as tk
 from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+=======
+import tkinter as tk
+from tkinter import messagebox
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
+
+>>>>>>> aca91ec61f81bc3c4c0b331ff5c132c1ef486e65
 class KuisApp:
     def __init__(self, root):
         self.root = root
